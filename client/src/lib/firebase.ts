@@ -7,13 +7,13 @@ import {
 } from 'firebase/auth'
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyD0OFEsFdTjjmwzYIS3GKEMozI4_T0EY_k',
-	authDomain: 'atlan-app.firebaseapp.com',
-	projectId: 'atlan-app',
-	storageBucket: 'atlan-app.firebasestorage.app',
-	messagingSenderId: '877773616509',
-	appId: '1:877773616509:web:2c0290f499a4a6f2964814',
-	measurementId: 'G-0X3ZZMMD5N',
+	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+	authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+	projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+	storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+	messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_SENDER_ID,
+	appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+	measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
 const app = initializeApp(firebaseConfig)

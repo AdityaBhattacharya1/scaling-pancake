@@ -54,9 +54,12 @@ export default function ChatBox() {
 					type="text"
 					value={input}
 					onChange={(e) => setInput(e.target.value)}
-					placeholder="Send a message..."
+					placeholder={
+						auth.currentUser ? 'Send a message...' : 'Login to chat'
+					}
 					className="input input-bordered w-full"
 					onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+					disabled={!!!auth.currentUser}
 				/>
 			</div>
 		</div>
