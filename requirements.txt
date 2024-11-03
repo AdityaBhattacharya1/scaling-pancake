@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+langchain
+psycopg2-binary
+python-dotenv
+unstructured
+unstructured[pdf]
