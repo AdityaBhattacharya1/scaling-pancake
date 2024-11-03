@@ -1,3 +1,5 @@
 *.ipynb
 env
 testingcode.py
+data
+.env

@@ -8,14 +8,11 @@ from langchain_openai import ChatOpenAI
 from langchain_postgres import PGVector
 from langchain_postgres.vectorstores import PGVector
 from langchain_openai import OpenAIEmbeddings
-
+from dotenv import load_dotenv, find_dotenv
 
 router = APIRouter()
+load_dotenv(find_dotenv())
 
-
-os.environ["OPENAI_API_KEY"] = ""
-
-CONNECTION_STRING = "postgresql+psycopg2://postgres:password@localhost:5432/test"
 COLLECTION_NAME = "vectordb"
 
 logging.basicConfig(level=logging.INFO)
@@ -26,7 +23,7 @@ llm = ChatOpenAI(model="gpt-4o")
 vector_store = PGVector(
     embeddings=embeddings,
     collection_name=COLLECTION_NAME,
-    connection=CONNECTION_STRING,
+    connection=os.getenv("CONNECTION_STRING"),
     use_jsonb=True,
 )
 
@@ -51,8 +48,10 @@ async def query_rag(user_id: str, question_request: QuestionRequest):
             question_request.question,
             user_id=user_id,
             llm=llm,
-            retriever=vector_store.as_retriever(),
+            retriever=vector_store.as_retriever(
+                search_kwargs={"filter": {"user_id": user_id}},
+            ),
         )
-        return {"answer": answer}
+        return {"answer": answer["answer"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
