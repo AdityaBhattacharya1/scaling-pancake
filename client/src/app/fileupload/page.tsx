@@ -1,5 +1,5 @@
 'use client'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation'
 import { BsCloudUpload } from 'react-icons/bs'
@@ -66,7 +66,6 @@ export default function FileUploadPage() {
 					method: 'POST',
 					body: formData,
 				})
-				console.log(await response.json())
 				if (response.ok) {
 					toast.success('File uploaded successfully')
 					setTimeout(() => router.push('/'), 1000)
