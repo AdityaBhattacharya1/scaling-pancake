@@ -13,7 +13,6 @@ from dotenv import load_dotenv, find_dotenv
 router = APIRouter()
 load_dotenv(find_dotenv())
 
-COLLECTION_NAME = "vectordb"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,7 +21,7 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 llm = ChatOpenAI(model="gpt-4o")
 vector_store = PGVector(
     embeddings=embeddings,
-    collection_name=COLLECTION_NAME,
+    collection_name=os.getenv("COLLECTION_NAME"),
     connection=os.getenv("CONNECTION_STRING"),
     use_jsonb=True,
 )
@@ -30,6 +29,7 @@ vector_store = PGVector(
 
 class QuestionRequest(BaseModel):
     question: str
+    chat_history: list
 
 
 @router.post("/upload/{user_id}")
@@ -45,12 +45,12 @@ async def upload_pdf(user_id: str, file: UploadFile = File(...)):
 async def query_rag(user_id: str, question_request: QuestionRequest):
     try:
         answer = await get_answer(
-            question_request.question,
-            user_id=user_id,
+            question=question_request.question,
             llm=llm,
             retriever=vector_store.as_retriever(
                 search_kwargs={"filter": {"user_id": user_id}},
             ),
+            chat_history=question_request.chat_history
         )
         return {"answer": answer["answer"]}
     except Exception as e:

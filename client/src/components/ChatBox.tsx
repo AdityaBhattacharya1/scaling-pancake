@@ -24,7 +24,7 @@ export default function ChatBox() {
 	const handleSend = async () => {
 		console.log(messages)
 		if (input.trim() && userId) {
-			const idToken = await auth.currentUser?.uid
+			const idToken = auth.currentUser?.uid
 			setMessages([...messages, { sender: 'user', text: input }])
 			setInput('')
 			const response = await fetch(`${API_URL}/query/${idToken}`, {
@@ -33,7 +33,10 @@ export default function ChatBox() {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${idToken}`,
 				},
-				body: JSON.stringify({ question: input, userId }),
+				body: JSON.stringify({
+					question: input,
+					chat_history: messages,
+				}),
 			})
 			const data = await response.json()
 			console.log(data)

@@ -4,9 +4,13 @@ import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation'
 import { BsCloudUpload } from 'react-icons/bs'
 import { auth } from '@/lib/firebase'
+import { ToastContainer, toast } from 'react-toastify'
+
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function FileUploadPage() {
 	const [file, setFile] = useState<File | null>(null)
+	const [loading, setLoading] = useState(false)
 	const router = useRouter()
 	const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -14,16 +18,25 @@ export default function FileUploadPage() {
 		if (acceptedFiles.length > 0) {
 			setFile(acceptedFiles[0])
 		}
-		console.log(file)
+		if (isDragReject) {
+			toast.error('Invalid file format, only upload PDF files')
+		}
 	}
 
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+	const {
+		getRootProps,
+		getInputProps,
+		isDragActive,
+		fileRejections,
+		isDragReject,
+	} = useDropzone({
 		onDrop,
 		accept: { 'application/pdf': ['.pdf'] },
 		multiple: false,
 	})
 
 	const handleUpload = async () => {
+		setLoading(true)
 		if (file) {
 			const formData = new FormData()
 			const idToken = await auth.currentUser?.uid
@@ -37,14 +50,16 @@ export default function FileUploadPage() {
 				})
 				console.log(await response.json())
 				if (response.ok) {
-					alert('File uploaded successfully')
-					router.push('/')
+					toast.success('File uploaded successfully')
+					setTimeout(() => router.push('/'), 1000)
 				} else {
-					alert('Failed to upload file')
+					toast.error('Failed to upload file')
 				}
 			} catch (error) {
 				console.error('Upload error:', error)
-				alert('An error occurred while uploading the file.')
+				toast.error('An error occurred while uploading the file.')
+			} finally {
+				setLoading(false)
 			}
 		}
 	}
@@ -71,15 +86,20 @@ export default function FileUploadPage() {
 			{file && (
 				<div className="mt-4 text-center">
 					<p>Selected file: {file.name}</p>
-					<button
-						onClick={handleUpload}
-						className="btn btn-primary mt-4"
-						disabled={!file}
-					>
-						Upload File
-					</button>
+					{!loading ? (
+						<button
+							onClick={handleUpload}
+							className="btn btn-primary mt-4"
+							disabled={!file}
+						>
+							Upload File
+						</button>
+					) : (
+						<span className="loading loading-spinner loading-lg mt-2"></span>
+					)}
 				</div>
 			)}
+			<ToastContainer />
 		</div>
 	)
 }

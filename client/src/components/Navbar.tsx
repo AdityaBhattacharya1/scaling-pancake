@@ -9,7 +9,6 @@ import { GoPlusCircle } from 'react-icons/go'
 
 export default function Navbar() {
 	const [user, setUser] = useState<User | null>(null)
-	const router = useRouter()
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -46,7 +45,9 @@ export default function Navbar() {
 								className="btn btn-sm btn-outline"
 							>
 								<GoPlusCircle />
-								Upload PDF
+								<span className="lg:block hidden">
+									Upload PDF
+								</span>
 							</Link>
 						</div>
 						<div className="dropdown dropdown-end">
