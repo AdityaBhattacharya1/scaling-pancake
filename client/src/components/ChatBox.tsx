@@ -25,7 +25,7 @@ export default function ChatBox() {
 		console.log(messages)
 		if (input.trim() && userId) {
 			const idToken = auth.currentUser?.uid
-			setMessages([...messages, { sender: 'user', text: input }])
+			setMessages([...messages, { sender: 'user', text: input }]) // update messages to include user's message
 			setInput('')
 			const response = await fetch(`${API_URL}/query/${idToken}`, {
 				method: 'POST',
@@ -44,7 +44,7 @@ export default function ChatBox() {
 				...messages,
 				{ sender: 'user', text: input },
 				{ sender: 'assistant', text: data.answer },
-			])
+			]) // update messages again to include the ai response as well
 		}
 	}
 
@@ -61,7 +61,7 @@ export default function ChatBox() {
 					value={input}
 					onChange={(e) => setInput(e.target.value)}
 					placeholder={
-						auth.currentUser ? 'Send a message...' : 'Login to chat'
+						auth.currentUser ? 'Send a message...' : 'Login to chat' // only allow user to chat if logged in
 					}
 					className="input input-bordered w-full"
 					onKeyDown={(e) => e.key === 'Enter' && handleSend()}

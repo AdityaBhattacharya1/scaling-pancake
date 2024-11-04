@@ -12,6 +12,8 @@ import { useUserContext } from '@/context/UserContext'
 export default function FileUploadPage() {
 	const [file, setFile] = useState<File | null>(null)
 	const [loading, setLoading] = useState(false)
+	const [userId, setUserId] = useState<string | null>(null)
+
 	const router = useRouter()
 	const { setUploadedFileName } = useUserContext()
 	const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -28,9 +30,16 @@ export default function FileUploadPage() {
 
 	useEffect(() => {
 		if (file?.name) {
-			setUploadedFileName(file.name)
+			setUploadedFileName(file.name) // set current uploaded file name as soon as file is updated
 		}
 	}, [file])
+
+	useEffect(() => {
+		const unsubscribe = auth.onAuthStateChanged((user) => {
+			setUserId(user?.uid || null)
+		})
+		return () => unsubscribe()
+	}, [])
 
 	const {
 		getRootProps,
@@ -73,7 +82,7 @@ export default function FileUploadPage() {
 		}
 	}
 
-	return (
+	return userId ? (
 		<div className="flex flex-col items-center justify-center min-h-screen p-4 bg-base-100">
 			<h1 className="text-3xl font-bold mb-6">Upload PDF</h1>
 			<div
@@ -109,6 +118,10 @@ export default function FileUploadPage() {
 				</div>
 			)}
 			<ToastContainer />
+		</div>
+	) : (
+		<div className="flex justify-center items-center text-2xl font-semibold min-h-96">
+			Log in first in order to upload files!
 		</div>
 	)
 }
