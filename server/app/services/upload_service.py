@@ -27,7 +27,7 @@ async def upload_file(user_id: str, file: UploadFile, vectorstore: PGVector):
     documents_with_metadata = [
         Document(
             page_content=split.page_content,
-            metadata={"user_id": user_id, "upload_date": datetime.now()},
+            metadata={"user_id": user_id, "upload_date": str(datetime.now())},
         )
         for split in splits
     ]

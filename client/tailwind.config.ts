@@ -8,5 +8,8 @@ const config: Config = {
 	],
 	theme: {},
 	plugins: [require('daisyui')],
+	daisyui: {
+		themes: ['light'],
+	},
 }
 export default config

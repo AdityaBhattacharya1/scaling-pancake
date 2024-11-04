@@ -9,7 +9,7 @@ export default function Message({ sender, text }: MessageProps) {
 		<div className={`chat ${isUser ? 'chat-end' : 'chat-start'}`}>
 			<div
 				className={`chat-bubble ${
-					isUser ? 'bg-blue-500 text-white' : 'bg-gray-200'
+					isUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
 				}`}
 			>
 				{text}
