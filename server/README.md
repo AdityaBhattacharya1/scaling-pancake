@@ -19,8 +19,8 @@ This project is a FastAPI server that provides an API for handling PDF file uplo
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/AdityaBhattacharya1/scaling-pancake
+cd scaling-pancake/server
 ```
 
 ### 2. Install dependencies
