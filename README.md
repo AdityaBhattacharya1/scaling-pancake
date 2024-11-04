@@ -60,3 +60,11 @@
 -   **Scalability**:
     -   FastAPI and Next.js are both performance-oriented frameworks that can handle scaling needs as the application grows.
     -   PGVector enables fast and efficient semantic search, which is crucial for RAG applications.
+
+## Setup Guides
+For setup guides, refer to the READMEs given in the below folders: 
+
+**1. Client**: https://github.com/AdityaBhattacharya1/scaling-pancake/tree/main/client
+
+**2. Server**: https://github.com/AdityaBhattacharya1/scaling-pancake/tree/main/server
+
