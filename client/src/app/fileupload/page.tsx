@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation'
 import { BsCloudUpload } from 'react-icons/bs'
@@ -7,21 +7,30 @@ import { auth } from '@/lib/firebase'
 import { ToastContainer, toast } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
+import { useUserContext } from '@/context/UserContext'
 
 export default function FileUploadPage() {
 	const [file, setFile] = useState<File | null>(null)
 	const [loading, setLoading] = useState(false)
 	const router = useRouter()
+	const { setUploadedFileName } = useUserContext()
 	const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 	const onDrop = (acceptedFiles: File[]) => {
 		if (acceptedFiles.length > 0) {
 			setFile(acceptedFiles[0])
+			setUploadedFileName(acceptedFiles[0].name)
 		}
 		if (isDragReject) {
 			toast.error('Invalid file format, only upload PDF files')
 		}
 	}
+
+	useEffect(() => {
+		if (file?.name) {
+			setUploadedFileName(file.name)
+		}
+	}, [file])
 
 	const {
 		getRootProps,

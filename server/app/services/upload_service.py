@@ -2,7 +2,7 @@ import os
 from fastapi import UploadFile
 from langchain_postgres.vectorstores import PGVector
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader, PyMuPDFLoader
 from langchain.schema import Document
 from datetime import datetime
 
@@ -20,13 +20,13 @@ async def upload_file(user_id: str, file: UploadFile, vectorstore: PGVector):
         content = await file.read()
         f.write(content)
 
-    loader = PyPDFLoader(file_location)
+    loader = DirectoryLoader(user_dir, use_multithreading=True, show_progress=True, loader_cls=PyMuPDFLoader)
     docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     splits = text_splitter.split_documents(docs)
     documents_with_metadata = [
         Document(
-            page_content=split.page_content,
+            page_content=split.page_content.replace('\x00', ''),
             metadata={"user_id": user_id, "upload_date": str(datetime.now())},
         )
         for split in splits

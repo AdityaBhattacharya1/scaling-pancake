@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model="gpt-3.5-turbo")
 vector_store = PGVector(
     embeddings=embeddings,
     collection_name=os.getenv("COLLECTION_NAME"),
